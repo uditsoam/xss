@@ -24,7 +24,7 @@ Impact: Low to Medium
 Probability: High
 Overall Risk: Medium
 
-### What Can XSS Do?
+## What Can XSS Do?
   #### Common Attacks
 Steal session cookies
 Perform actions as the user
