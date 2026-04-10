@@ -67,6 +67,7 @@ If alert appears again → Stored XSS confirmed
 Payload is coming from database, not just request
 
 
+
 ## Key Indicator of Stored XSS
 Behavior	Meaning
 Runs once	Reflected XSS
