@@ -41,10 +41,10 @@ Limited to browser environment
 Restricted by same-origin policy
 
 ### Real-World Examples
- #### Samy Worm (2005)
+ #### -> Samy Worm (2005)
 Exploited stored XSS in MySpace
 Spread to over 1 million users in one day
- #### TweetDeck XSS (Twitter)
+ #### -> TweetDeck XSS (Twitter)
 Self-retweeting payload
 Spread to 38,000 users in under 2 minutes
 
