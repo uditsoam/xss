@@ -1,5 +1,5 @@
 # WHAT IS XSS
-# XSS (Cross-Site Scripting) – Full Concept + Notes
+## XSS (Cross-Site Scripting) – Full Concept + Notes
 #  Introduction
 Web applications accept user input (e.g., forms, comments, search fields). If this input is not properly sanitized, attackers can inject malicious scripts.
 Cross-Site Scripting (XSS) is a vulnerability that allows attackers to inject JavaScript into web pages, which executes in the victim’s browser.
