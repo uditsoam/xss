@@ -22,7 +22,7 @@ Stored XSS (Persistent XSS) occurs when:
 
 ---
 
-##Vulnerability Condition
+## Vulnerability Condition
 
 If the application:
 
