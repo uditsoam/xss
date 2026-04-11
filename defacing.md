@@ -1,22 +1,22 @@
-# 💀 XSS Exploitation: Website Defacing
+#  XSS Exploitation: Website Defacing
 
 ---
 
-## 🔹 What is Defacing?
+##  What is Defacing?
 
 Website defacing is an attack where the attacker **changes the visual appearance of a web page** for users.
 
-👉 Common goals:
+ Common goals:
 
 * Show "Hacked by..." message
 * Damage reputation
 * Demonstrate successful exploitation
 
-📌 Defacing is commonly achieved using **Stored XSS** 
+ Defacing is commonly achieved using **Stored XSS** 
 
 ---
 
-## 🔹 Why Stored XSS is Used?
+##  Why Stored XSS is Used?
 
 * Payload is **stored in the database**
 * Executes for **every user visiting the page**
@@ -24,11 +24,11 @@ Website defacing is an attack where the attacker **changes the visual appearance
 
 ---
 
-## 🔹 Core Concept
+##  Core Concept
 
 XSS allows execution of **JavaScript in the victim’s browser**, which can manipulate the **DOM (Document Object Model)**.
 
-👉 This enables:
+ This enables:
 
 * Changing content
 * Modifying layout
@@ -36,7 +36,7 @@ XSS allows execution of **JavaScript in the victim’s browser**, which can mani
 
 ---
 
-## 🔹 Key Elements Used in Defacing
+##  Key Elements Used in Defacing
 
 | Element                          | Purpose                        |
 | -------------------------------- | ------------------------------ |
@@ -47,7 +47,7 @@ XSS allows execution of **JavaScript in the victim’s browser**, which can mani
 
 ---
 
-## 🔹 Defacing Techniques
+##  Defacing Techniques
 
 ---
 
@@ -97,7 +97,7 @@ document.getElementsByTagName('body')[0].innerHTML = "Hacked";
 
 ---
 
-## 🔹 Full Defacement Payload
+##  Full Defacement Payload
 
 ```html
 <script>
@@ -110,7 +110,7 @@ document.getElementsByTagName('body')[0].innerHTML =
 
 ---
 
-## 🔹 How It Works
+## How It Works
 
 1. Attacker injects payload (via Stored XSS)
 2. Payload is saved on server
@@ -120,7 +120,7 @@ document.getElementsByTagName('body')[0].innerHTML =
 
 ---
 
-## 🔹 Important Notes
+##  Important Notes
 
 * The **original source code remains unchanged**
 * Only the **rendered view in the browser is modified** 
@@ -128,17 +128,17 @@ document.getElementsByTagName('body')[0].innerHTML =
 
 ---
 
-## 🔹 XSS Type vs Defacing
+##  XSS Type vs Defacing
 
 | XSS Type      | Defacing Capability |
 | ------------- | ------------------- |
-| Stored XSS    | ✅ Persistent        |
-| Reflected XSS | ❌ Temporary         |
-| DOM XSS       | ⚠️ Limited          |
+| Stored XSS    |  Persistent        |
+| Reflected XSS |  Temporary         |
+| DOM XSS       |  Limited          |
 
 ---
 
-## 🔹 Real-World Impact
+##  Real-World Impact
 
 * Website appears compromised
 * User trust is affected
@@ -150,7 +150,7 @@ document.getElementsByTagName('body')[0].innerHTML =
 
 ---
 
-## 🔹 Key Takeaways
+##  Key Takeaways
 
 * Defacing = **UI manipulation via XSS**
 * Requires **JavaScript execution in browser**
