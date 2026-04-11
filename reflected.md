@@ -1,159 +1,275 @@
 # 🟡 Reflected XSS (Non-Persistent XSS) – Complete Notes
 
-## 📌 Introduction
-Reflected XSS is a type of **Non-Persistent XSS** where:
-- Input is processed by the backend server  
-- Returned in the response  
-- Not stored in the database  
+---
 
-👉 The attack exists only for a single request and disappears after refresh.
+## 📌 Introduction
+
+Reflected XSS is a type of **Non-Persistent XSS** where:
+
+* Input is processed by the backend server
+* Returned in the response
+* Not stored in the database
+
+The attack exists only for a single request and disappears after refresh.
 
 ---
 
 ## 📌 What is Reflected XSS?
+
 Reflected XSS occurs when:
-- User input is sent to the server  
-- Server reflects the same input in the response  
-- Input is NOT sanitized  
-- JavaScript executes in the browser  
+
+* User input is sent to the server
+* Server reflects the same input in the response
+* Input is not sanitized
+* JavaScript executes in the browser
 
 ---
 
 ## 📌 Key Characteristics
-- Not stored in database  
-- Executes only once  
-- Disappears after refresh  
-- Targets specific user  
-- Requires user interaction (clicking link)  
+
+* Not stored in database
+* Executes only once
+* Disappears after refresh
+* Targets specific user
+* Requires user interaction (clicking link)
 
 ---
 
 ## 📌 Practical Example
 
 ### Scenario (To-Do App)
-- User enters a task  
-- Application shows error message including user input  
 
+* User enters a task
+* Application shows error message including user input
 
-#### If application:
- Reflects input in response
- Does not sanitize input
-👉 Then it is vulnerable to Reflected XSS
+If the application:
 
+* Reflects input in response
+* Does not sanitize input
 
-### 📌 XSS Testing Payloads
-🔥 Basic Payload
+Then it is vulnerable to Reflected XSS.
+
+---
+
+## 📌 XSS Testing Payloads
+
+### Basic Payload
+
+```html
 <script>alert(window.origin)</script>
+```
 
-👉 Use:
-Input fields
+### Simple Alert Payload
 
-URL parameters
-🔹 Simple Alert Payload
+```html
 <script>alert(1)</script>
-🔹 Print Payload (less blocked)
+```
+
+### Print Payload
+
+```html
 <script>print()</script>
-🔹 Plaintext Payload
+```
+
+### Plaintext Payload
+
+```html
 <plaintext>
+```
 
+---
 
-### 📌 Where Payload is Used
-🔍 Common Injection Points
-Search bars
-Error messages
-URL parameters (?q=, ?task=)
-Login forms
-Filters and query inputs
+## 📌 Where Payload is Used
 
-### 📌 Execution Process
-Step-by-Step:
-Inject payload in input field
-Click submit / send request
-Server reflects input in response
-Browser executes script
+### Common Injection Points
 
-### 📌 Example URL Attack
+* Search bars
+* Error messages
+* URL parameters (`?q=`, `?task=`)
+* Login forms
+* Filters and query inputs
+
+---
+
+## 📌 Execution Process
+
+### Step-by-Step
+
+1. Inject payload in input field
+2. Submit request
+3. Server reflects input in response
+4. Browser executes script
+
+---
+
+## 📌 Example URL Attack
+
+```bash
 http://target.com/?task=<script>alert(window.origin)</script>
+```
 
-#### 👉 When victim opens link:
+### Encoded Payload
 
-Script executes
-📌 Encoded Payload (Important)
+```bash
 http://target.com/?task=%3Cscript%3Ealert(1)%3C/script%3E
+```
 
-👉 Used to bypass filters
+Used to bypass filters.
 
-📌 Behavior Observation
-Output:
+---
+
+## 📌 Behavior Observation
+
+### Output Example
+
+```html
 Task '' could not be added.
+```
 
-### 👉 Reason:
+### Reason
 
-Script executed
-Not displayed as text
-📌 Page Source Verification
+* Script executed
+* Not displayed as text
+
+---
+
+## 📌 Page Source Verification
+
 Check using:
-Right click → View Page Source
-OR press CTRL + U
-Example:
+
+```bash
+CTRL + U
+```
+
+### Example Source
+
+```html
 Task '<script>alert(window.origin)</script>' could not be added.
+```
 
-👉 Confirms:
+### Conclusion
 
-Input reflected in HTML
-No sanitization
-📌 Non-Persistent Nature
-Test:
-Refresh page
-Result:
-Alert does NOT appear again
-Payload disappears
+* Input is reflected in HTML
+* No sanitization applied
 
-👉 Confirms Reflected XSS
+---
 
-📌 How to Exploit Reflected XSS
-Step 1: Check Request Type
+## 📌 Non-Persistent Nature
+
+### Test
+
+* Refresh the page
+
+### Result
+
+* Alert does not appear again
+* Payload disappears
+
+This confirms Reflected XSS.
+
+---
+
+## 📌 How to Exploit Reflected XSS
+
+### Step 1: Check Request Type
+
 Open DevTools → Network tab
 
-👉 If:
+If request is:
 
-GET request
-Step 2: Create Malicious URL
+```bash
+GET
+```
+
+---
+
+### Step 2: Create Malicious URL
+
+```bash
 http://target.com/?q=<script>alert(1)</script>
-Step 3: Send to Victim
-Email
-WhatsApp
-Phishing
-Step 4: Victim Clicks
+```
 
+---
 
+### Step 3: Send to Victim
 
-## 👉 Script executes in browser
+* Email
+* WhatsApp
+* Phishing link
 
-### 📌 Why Reflected XSS Needs Social Engineering
-Not stored
-Only works when link is opened
-Requires victim interaction
-### 📌 Impact of Reflected XSS
-Cookie stealing
-Account takeover
-Phishing attacks
-Redirecting users
-Executing malicious actions
-### 📌 Key Indicators
-Behavior	Meaning
-Runs once	Reflected XSS
-Disappears after refresh	Non-Persistent
-Requires link click	User-targeted attack
-### 📌 Difference from Stored XSS
-Feature	Stored XSS	Reflected XSS
-Storage	Database	Not stored
-Execution	Every user	Specific user
-Persistence	Yes	No
-Interaction	Not required	Required
+---
 
+### Step 4: Victim Clicks
 
+* Script executes in browser
 
+---
 
+## 📌 Why Reflected XSS Needs Social Engineering
 
-<div></div><ul class="list-unstyled" id="todo"><div style="padding-left:25px">Task '<script>alert(window.origin)</script>' could not be added.</div></ul>
+* Not stored
+* Works only when link is opened
+* Requires user interaction
+
+---
+
+## 📌 Impact of Reflected XSS
+
+* Cookie stealing
+* Account takeover
+* Phishing attacks
+* Redirecting users
+* Executing malicious actions
+
+---
+
+## 📌 Key Indicators
+
+| Behavior                 | Meaning              |
+| ------------------------ | -------------------- |
+| Runs once                | Reflected XSS        |
+| Disappears after refresh | Non-Persistent       |
+| Requires link click      | User-targeted attack |
+
+---
+
+## 📌 Difference from Stored XSS
+
+| Feature     | Stored XSS   | Reflected XSS |
+| ----------- | ------------ | ------------- |
+| Storage     | Database     | Not stored    |
+| Execution   | Every user   | Specific user |
+| Persistence | Yes          | No            |
+| Interaction | Not required | Required      |
+
+---
+
+## 📌 Real Response Example (Vulnerable Output)
+
+```html
+<div></div>
+<ul class="list-unstyled" id="todo">
+  <div style="padding-left:25px">
+    Task '<script>alert(window.origin)</script>' could not be added.
+  </div>
+</ul>
+```
+
+### Explanation
+
+* User input is directly embedded in HTML
+* Script is not sanitized
+* Browser executes JavaScript
+* Confirms Reflected XSS vulnerability
+
+---
+
+## 🧠 Key Takeaways
+
+* Reflected XSS is temporary and request-based
+* Payload is reflected in response
+* Requires user interaction
+* Easily exploitable via malicious links
+* Always verify reflection + execution
+
+---
