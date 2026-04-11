@@ -1,135 +1,248 @@
-## 1. What is DOM XSS?
+#  DOM-Based XSS Notes
 
-DOM-Based XSS is a type of Non-Persistent XSS where:
+---
 
-The attack is executed entirely in the browser (client-side)
-The input never reaches the backend server
-JavaScript modifies the page using the DOM (Document Object Model)
+##  1. What is DOM XSS?
 
-###  Simple definition:
-DOM XSS occurs when JavaScript takes user input and writes it into the page without proper sanitization.
+DOM-Based XSS is a type of **Non-Persistent XSS** where:
 
+* The attack is executed entirely in the **browser (client-side)**
+* The input never reaches the **backend server**
+* JavaScript modifies the page using the **DOM (Document Object Model)**
 
-## 2. How DOM XSS Works (Flow)
- Step-by-step:
-User input is placed in the URL (usually after #)
-JavaScript reads this input from the URL
-JavaScript writes it into the page (DOM)
-Browser executes it
+### Definition:
 
+DOM XSS occurs when JavaScript takes user input and writes it into the page **without proper sanitization**.
 
-### 3. Example (To-Do App)
-Input:
-  test
-URL:
-   http://site.com/#task=test
-Output:
-   Next Task: test
+---
 
+##  2. How DOM XSS Works (Flow)
 
-## 4. Key Observation (Very Important)
-Open DevTools → Network tab
-Add input again
-You will see NO HTTP request
+### Step-by-step:
 
-This means:
-Server is NOT involved
-Everything happens in the browser
+1. User input is placed in the URL (usually after `#`)
+2. JavaScript reads this input
+3. JavaScript writes it into the DOM
+4. Browser executes it
 
+---
 
-## 5. URL Fragment (#)
- http://site.com/#task=test
- #task=test is called a URL fragment
-It is processed only in the browser
-It is NOT sent to the server
+##  3. Example (To-Do App)
 
- This is a strong indicator of DOM XSS
+### Input:
 
+```bash
+test
+```
 
-## 6. Why Input is Not in Page Source
+### URL:
 
- Press CTRL + U (View Page Source)
-You will NOT find your input
- Reason:
-JavaScript updates the page AFTER load
-So input is not in original HTML
+```bash
+http://site.com/#task=test
+```
+
+### Output:
+
+```bash
+Next Task: test
+```
+
+---
+
+##  4. Key Observation (Very Important)
+
+ Open DevTools → Network tab
+ Add input again
+
+ You will see **NO HTTP request**
+
+### This means:
+
+* Server is NOT involved
+* Everything happens in the browser
+
+---
+
+##  5. URL Fragment (#)
+
+```bash
+http://site.com/#task=test
+```
+
+* `#task=test` is called a **URL fragment**
+* Processed only in the browser
+* NOT sent to server
+
+ Strong indicator of DOM XSS
+
+---
+
+## 6. Why Input is NOT in Page Source
+
+ Press `CTRL + U` (View Page Source)
+
+ Input will NOT appear
+
+### Reason:
+
+* JavaScript updates page **after load**
+
  Use:
-Inspect Element (CTRL + SHIFT + C) to see it
 
+```bash
+Inspect Element (CTRL + SHIFT + C)
+```
 
-## 7. Source & Sink Concept (Very Important )
-### Source (Where input comes from)
+---
+
+##  7. Source & Sink Concept (VERY IMPORTANT)
+
+###  Source (Input origin)
+
+```javascript
 var pos = document.URL.indexOf("task=");
 var task = document.URL.substring(pos + 5);
- Input is taken from:
+```
+
+ Input comes from:
+
+```bash
 URL
- This is called SOURCE
-### Sink (Where input is written)
+```
+
+---
+
+###  Sink (Where input is used)
+
+```javascript
 document.getElementById("todo").innerHTML =
 "<b>Next Task:</b> " + decodeURIComponent(task);
- Input is written into:
+```
+
+Input written into:
+
+```bash
 DOM
- This is called SINK
+```
 
-## 8. Why DOM XSS Happens
-Attacker controls the input (Source)
-Input is written to DOM (Sink)
-No sanitization is applied
+---
 
- Result: XSS vulnerability
+##  8. Why DOM XSS Happens
 
-## 9. Dangerous Sink Functions
- Common vulnerable functions:
+* Attacker controls input (Source)
+* Input is written into DOM (Sink)
+* No sanitization applied
+
+ Result: **XSS Vulnerability**
+
+---
+
+##  9. Dangerous Sink Functions
+
+### Common:
+
+```javascript
 innerHTML
 outerHTML
 document.write()
- jQuery functions:
+```
+
+### jQuery:
+
+```javascript
 append()
 after()
 add()
- If these are used without sanitization → XSS possible
+```
 
+ If used without sanitization → XSS possible
 
-## 10. Why <script> Does Not Work
+---
+
+##  10. Why `<script>` Does NOT Work
+
+```html
 <script>alert(1)</script>
- Usually does NOT execute in DOM XSS ❌
- Reason:
+```
 
-innerHTML blocks <script> tags
+ Usually does NOT execute
 
-## 11. Working DOM XSS Payload
- Payload:
+### Reason:
+
+* `innerHTML` blocks `<script>` tags
+
+---
+
+##  11. Working DOM XSS Payload
+
+```html
 <img src="" onerror=alert(window.origin)>
+```
 
+---
 
-## 12. How This Payload Works
+##  12. How Payload Works
+
+```html
 <img src="">
-Image fails to load
+```
+
+→ Image fails to load
+
+```html
 onerror=alert(window.origin)
-Executes JavaScript on error
- Result:
-Alert popup appears
+```
 
+→ JS executes on error
 
-## 13. Full Attack URL
+ Result: Alert popup
+
+---
+
+##  13. Full Attack URL
+
+```bash
 http://site.com/#task=<img src="" onerror=alert(window.origin)>
- When victim opens:
-JavaScript executes
+```
 
+ When victim opens → JS executes
 
-## 14. How to Detect DOM XSS
- Steps:
-Check URL for # parameter
-Open DevTools → Network tab
-No request → client-side
-Inspect JavaScript code
-### Look for:
+---
+
+##  14. How to Detect DOM XSS
+
+### Steps:
+
+1. Check URL for `#` parameter
+2. Open DevTools → Network tab
+3. No request → client-side
+4. Inspect JavaScript code
+
+---
+
+###   Look for:
+
+```javascript
 innerHTML
 document.write()
-Inject payload:
+```
+
+---
+
+###  Test Payload:
+
+```html
 <img src=x onerror=alert(1)>
+```
 
+---
 
+##  Key Takeaways
 
+* DOM XSS = Client-side execution
+* No server involvement
+* Source → Sink flow is critical
+* `<script>` often blocked
+* Use event-based payloads
 
-
+---
